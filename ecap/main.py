@@ -4,6 +4,7 @@ from sklearn.model_selection import KFold
 import statistics
 import math
 import quadprog
+import ecap
 
 def ecap(unadjusted_prob, win_var, win_id, bias_indicator=False, lambda_grid=np.power(10, np.linspace(-6, 0, num=13)),
          gamma_grid=np.linspace(0.001,0.05,num=50), theta_grid=np.linspace(-4, 2, num=61, endpoint=True)):
