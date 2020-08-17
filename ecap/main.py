@@ -117,6 +117,10 @@ def ecap(unadjusted_prob, win_var, win_id, bias_indicator=False, lambda_grid=np.
 
 ## Use the fit ecap model to adjust a new set of probability estimates.
 def predict_ecap(object, new_unadjusted):
+    ## imports
+    from ecap.functions import prob_flip_fcn, eta_min_fcn, min_half_fcn, tweedie_est
+    from ecap.patsy_deriv import _eval_bspline_basis
+    
     ## Objects needed for quadratic program and omega matrix (same as ecap fcn)
     quantiles = np.linspace(0, 0.5, num=51)
 
@@ -131,7 +135,7 @@ def predict_ecap(object, new_unadjusted):
     basis_1_grid = _eval_bspline_basis(x=pt, knots=quantiles, degree=3, deriv=1, include_intercept=True)
 
     ## Use these parameters to generate ECAP estimates on a test set of probability estimates
-    new_flip = prob_flip_fcn_vec(new_unadjusted)
+    new_flip = [prob_flip_fcn(p) for p in new_unadjusted]
 
     ## Combine new probs with the old ones
     p_old_new = np.concatenate((object['unadjusted_prob'], p_new), axis=0)
@@ -141,9 +145,7 @@ def predict_ecap(object, new_unadjusted):
     # Generate the basis matrix and its correspoding 1st and 2nd deriv's
     basis_0_new = _eval_bspline_basis(x=probs_new_flip, knots=quantiles, degree=3, deriv=0, include_intercept=True)
     basis_1_new = _eval_bspline_basis(x=probs_new_flip, knots=quantiles, degree=3, deriv=1, include_intercept=True)
-    # basis_2_new = pd.DataFrame(_eval_bspline_basis(x=probs_flip, knots=quantiles, degree=3, der=2))
     basis_sum_new = basis_0_new.transpose().dot(basis_0_new)
-    # sum_b_d1 = basis_1_new.transpose().dot(np.repeat(1, basis_1_new.shape[0]))
 
     ecap_old_new = tweedie_est(object['lambda_opt'], object['gamma_opt'], object['theta_opt'], p_old_new,
                                p_old_new_flip, pt, omega, basis_0_new, basis_1_new, basis_sum_new,
