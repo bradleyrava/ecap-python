@@ -3,7 +3,7 @@ setup(
   name = 'ecap',         # How you named your package folder (MyLib)
   packages = ['ecap'],   # Chose the same as "name"
   version = '0.1.1',      # Start with a small number and increase it with every change you make
-  license='GPL-3',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
+  license='GPLv3',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
   description = 'Implements the Excess Certainty Adjusted Probability adjustment procedure as described in the paper "Irrational Exuberance: Correcting Bias in Probability Estimates" by Gareth James, Peter Radchenko, and Bradley Rava (Journal of the American Statistical Association, 2020; <doi:10.1080/01621459.2020.1787175>). The package includes a function that preforms the ECAP adjustment and a function that estimates the parameters needed for implementing ECAP. For testing and reproducibility, the ESPN and FiveThirtyEight data used in the paper are also included.',   # Give a short description about your library
   author = 'Bradley Rava',                   # Type in your name
   author_email = 'brava@marshall.usc.edu',      # Type in your E-Mail
