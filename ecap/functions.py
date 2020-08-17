@@ -91,7 +91,7 @@ def tweed_adj_fcn(eta_hat, gamma_param, theta_param, p_tilde, p_flip, probs, ome
     exp_p_hat = mu_hat + 0.5*theta_param*(-1*mu_hat-6*mu_hat*sigma2_hat-2*mu_hat**3+3*sigma2_hat+3*mu_hat**2)
     var_p_hat = ((1-0.5*theta_param)**2)*sigma2_hat + theta_param*sigma2_hat*(9*(mu_hat**4)*theta_param-18*(mu_hat**3)*theta_param + 9*(mu_hat**2)*theta_param-(1-theta_param*0.5)*(3*(mu_hat**2)-3*mu_hat))
 
-    p_hat = pd.Series([min_half_fcn(p_adj) for p_adj in (exp_p_hat + var_p_hat/exp_p_hat)])
+    p_hat = np.array([min_half_fcn(p_adj) for p_adj in (exp_p_hat + var_p_hat/exp_p_hat)])
     if (p_hat < 0).sum() > 0:
         p_hat = p_flip
 
@@ -116,7 +116,7 @@ def tweedie_est(lambda_param, gamma_param, theta_param, p_old_new, p_old_new_fli
     exp_p_hat = mu_hat + 0.5*theta_param*(-mu_hat-6*mu_hat*sigma2_hat-2*mu_hat**3+3*sigma2_hat+3*mu_hat**2)
     var_p_hat = ((1-0.5*theta_param)**2)*sigma2_hat + theta_param*sigma2_hat*(9*(mu_hat**4)*theta_param-18*(mu_hat**3)*theta_param + 9*(mu_hat**2)*theta_param-(1-theta_param*(1/2))*(3*(mu_hat**2)-3*mu_hat))
 
-    p_hat = pd.Series([min_half_fcn(p_adj) for p_adj in (exp_p_hat + var_p_hat/exp_p_hat)])
+    p_hat = np.array([min_half_fcn(p_adj) for p_adj in (exp_p_hat + var_p_hat/exp_p_hat)])
     if (p_hat < 0).sum() > 0:
         p_hat = p_old_new_flip
 
