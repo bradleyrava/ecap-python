@@ -8,6 +8,9 @@ import quadprog
 
 def ecap(unadjusted_prob, win_var, win_id, bias_indicator=False, lambda_grid=np.power(10, np.linspace(-6, 0, num=13)),
          gamma_grid=np.linspace(0.001,0.05,num=50), theta_grid=np.linspace(-4, 2, num=61, endpoint=True)):
+    ## imports
+    from ecap.functions import greater_half_indicator, prob_flip_fcn, dvec_terms_fcn, eta_min_fcn, risk_hat_fcn, risk_cvsplit_fcn, min_half_fcn, mle_binomial, tweed_adj_fcn, tweedie_est
+    from ecap.patsy_deriv import _eval_bspline_basis
          
     ## Win and Lose index's for later
     win_index = np.where(win_var == win_id)
