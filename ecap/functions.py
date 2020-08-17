@@ -55,7 +55,7 @@ def risk_cvsplit_fcn(lambda_grid, train_index, test_index, basis_0, basis_1, pro
     ## Calculate the column wise sum of the first derivative of our basis matrix
 
     ## Do this inversion for every value of lambda
-    eta_g = [eta_min_fcn(l, np.array(p_train), pt, omega, b_g_cv, b_g_d1_cv, basis_sum_train, basis_0_grid, basis_1_grid)
+    eta_g = [ecap.eta_min_fcn(l, np.array(p_train), pt, omega, b_g_cv, b_g_d1_cv, basis_sum_train, basis_0_grid, basis_1_grid)
              for l in lambda_grid]
 
     ## Now, lets consider the test data
@@ -64,11 +64,8 @@ def risk_cvsplit_fcn(lambda_grid, train_index, test_index, basis_0, basis_1, pro
     p_test = probs_flip[test_index]
     n = b_g_test.shape[0]
 
-    risk_hat = [risk_hat_fcn(eta_cur, b_g_test, b_g_d1_test, n, p_test) for eta_cur in eta_g]
+    risk_hat = [ecap.risk_hat_fcn(eta_cur, b_g_test, b_g_d1_test, n, p_test) for eta_cur in eta_g]
     return risk_hat
-
-def is_pos_def(x):
-    return np.all(np.linalg.eigvals(x) > 0)
 
 def min_half_fcn(p):
     if p > 0.5:
@@ -93,7 +90,7 @@ def tweed_adj_fcn(eta_hat, gamma_param, theta_param, p_tilde, p_flip, probs, ome
     exp_p_hat = mu_hat + 0.5*theta_param*(-1*mu_hat-6*mu_hat*sigma2_hat-2*mu_hat**3+3*sigma2_hat+3*mu_hat**2)
     var_p_hat = ((1-0.5*theta_param)**2)*sigma2_hat + theta_param*sigma2_hat*(9*(mu_hat**4)*theta_param-18*(mu_hat**3)*theta_param + 9*(mu_hat**2)*theta_param-(1-theta_param*0.5)*(3*(mu_hat**2)-3*mu_hat))
 
-    p_hat = [min_half_fcn(p_adj) for p_adj in (exp_p_hat + var_p_hat/exp_p_hat)]
+    p_hat = [ecap.min_half_fcn(p_adj) for p_adj in (exp_p_hat + var_p_hat/exp_p_hat)]
     if (p_hat < 0).sum() > 0:
         p_hat = p_flip
 
@@ -102,13 +99,13 @@ def tweed_adj_fcn(eta_hat, gamma_param, theta_param, p_tilde, p_flip, probs, ome
     p_hat[greater] = 1-p_hat[greater]
 
     ## Error from binomial likelihood
-    Q_gamma = mle_binomial(p_hat, win_index, lose_index)
+    Q_gamma = ecap.mle_binomial(p_hat, win_index, lose_index)
 
     return Q_gamma
 
 def tweedie_est(lambda_param, gamma_param, theta_param, p_old_new, p_old_new_flip, pt,
                 omega, basis_0, basis_1, basis_sum, basis_0_grid, basis_1_grid):
-    eta_hat = eta_min_fcn(lambda_param, p_old_new_flip, pt, omega, basis_0, basis_1, basis_sum, basis_0_grid, basis_1_grid)
+    eta_hat = ecap.eta_min_fcn(lambda_param, p_old_new_flip, pt, omega, basis_0, basis_1, basis_sum, basis_0_grid, basis_1_grid)
     g_hat = np.dot(basis_0, eta_hat)
     g_hat_d1 = np.dot(basis_1, eta_hat)
 
@@ -118,7 +115,7 @@ def tweedie_est(lambda_param, gamma_param, theta_param, p_old_new, p_old_new_fli
     exp_p_hat = mu_hat + 0.5*theta_param*(-mu_hat-6*mu_hat*sigma2_hat-2*mu_hat**3+3*sigma2_hat+3*mu_hat**2)
     var_p_hat = ((1-0.5*theta_param)**2)*sigma2_hat + theta_param*sigma2_hat*(9*(mu_hat**4)*theta_param-18*(mu_hat**3)*theta_param + 9*(mu_hat**2)*theta_param-(1-theta_param*(1/2))*(3*(mu_hat**2)-3*mu_hat))
 
-    p_hat = [min_half_fcn(p_adj) for p_adj in (exp_p_hat + var_p_hat/exp_p_hat)]
+    p_hat = [ecap.min_half_fcn(p_adj) for p_adj in (exp_p_hat + var_p_hat/exp_p_hat)]
     if (p_hat < 0).sum() > 0:
         p_hat = p_old_new_flip
 
