@@ -2,13 +2,13 @@ from distutils.core import setup
 setup(
   name = 'ecap',         
   packages = ['ecap'],   
-  version = '0.1.994',
+  version = '0.1.995',
   license='GPLv3',       
   description = 'Implements the Excess Certainty Adjusted Probability adjustment procedure.',
   author = 'Bradley Rava',                  
   author_email = 'brava@marshall.usc.edu',     
   url = 'https://github.com/bradleyrava',   
-  download_url = 'https://github.com/bradleyrava/ecap-python/archive/0.1.994.tar.gz',
+  download_url = 'https://github.com/bradleyrava/ecap-python/archive/0.1.995.tar.gz',
   keywords = ['Excess Certainty', 'Emperical Bayes', 'probability', 'calibration', 'statistics'],  
   install_requires=[            
           'pandas',
