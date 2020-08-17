@@ -2,7 +2,7 @@ ecap: Excess Certainty Adjusted Probability Estimate
 
 Implements the Excess Certainty Adjusted Probability adjustment procedure as described in the paper "Irrational Exuberance: Correcting Bias in Probability Estimates" by Gareth James, Peter Radchenko, and Bradley Rava (Journal of the American Statistical Association, 2020; <doi:10.1080/01621459.2020.1787175>). The package includes a function that preforms the ECAP adjustment and a function that estimates the parameters needed for implementing ECAP. For testing and reproducibility, the ESPN and FiveThirtyEight data used in the paper are also included.
 
-Version:	0.1.7
+Version:	0.1.8
 Published:	2020-08-16
 Author:	Bradley Rava, Peter Radchenko, and Gareth M. James
 Maintainer:	Bradley Rava <brava at marshall.usc.edu>

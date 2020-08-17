@@ -12,12 +12,15 @@ def ecap(unadjusted_prob, win_var, win_id, bias_indicator=False, lambda_grid=np.
     lose_index = np.where(win_var != win_id)
 
     ## Store the data
-    greater_half = pd.Series(greater_half_indicator_vec(unadjusted_prob))
+    risk_cvsplit_fcn(lambda_grid, train_index, test_index, basis_0, basis_1, np.array(probs_flip),
+                                       pt, omega, basis_0_grid, basis_1_grid)
+                      for train_index, test_index in kf.split(rows_rand)
+    greater_half = pd.Series([greater_half_indicator(p_tilde) for p_tilde in unadjusted_prob])
     probs = pd.concat([pd.Series(unadjusted_prob), pd.Series(greater_half), pd.Series(win_var)], axis=1)
     probs.columns = ['p_tilde', 'greater_half', 'win_var']
 
     ## Convert all probabilities to between 0 and 1/2
-    p_flip = prob_flip_fcn_vec(probs['p_tilde'])
+    p_flip = [prob_flip_fcn(p_tilde) for p_tilde in probs['p_tilde']]
     probs['p_flip'] = p_flip
     probs = probs.sort_values(by=['p_flip'])
 

@@ -71,15 +71,11 @@ def risk_cvsplit_fcn(lambda_grid, train_index, test_index, basis_0, basis_1, pro
     risk_hat = [risk_hat_fcn(eta_cur, b_g_test, b_g_d1_test, n, p_test) for eta_cur in eta_g]
     return risk_hat
 
-def is_pos_def(x):
-    return np.all(np.linalg.eigvals(x) > 0)
-
 def min_half_fcn(p):
     if p > 0.5:
         return 0.5
     else:
         return p
-min_half_fcn_vec = np.vectorize(min_half_fcn)
 
 def mle_binomial(p_hat, win_index, lose_index):
     log_term = sum([math.log(n) for n in p_hat[win_index]])
@@ -98,7 +94,8 @@ def tweed_adj_fcn(eta_hat, gamma_param, theta_param, p_tilde, p_flip, probs, ome
     exp_p_hat = mu_hat + 0.5*theta_param*(-1*mu_hat-6*mu_hat*sigma2_hat-2*mu_hat**3+3*sigma2_hat+3*mu_hat**2)
     var_p_hat = ((1-0.5*theta_param)**2)*sigma2_hat + theta_param*sigma2_hat*(9*(mu_hat**4)*theta_param-18*(mu_hat**3)*theta_param + 9*(mu_hat**2)*theta_param-(1-theta_param*0.5)*(3*(mu_hat**2)-3*mu_hat))
 
-    p_hat = min_half_fcn_vec(exp_p_hat + var_p_hat/exp_p_hat)
+    p_hat = [min_half_fcn(p_ecap) for p_ecap in (exp_p_hat + var_p_hat/exp_p_hat)]
+
     if (p_hat < 0).sum() > 0:
         p_hat = p_flip
 
