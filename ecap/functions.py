@@ -8,16 +8,12 @@ def greater_half_indicator(p_tilde_cur):
     else:
         return False
 
-greater_half_indicator_vec = np.vectorize(greater_half_indicator)
-
 ## Flip all probs greater than 1/2
 def prob_flip_fcn(p_tilde_cur):
     if p_tilde_cur > 0.5:
         return (1-p_tilde_cur)
     else:
         return p_tilde_cur
-
-prob_flip_fcn_vec = np.vectorize(prob_flip_fcn)
 
 def dvec_terms_fcn(p_flip_term, basis_0_part, basis_1_part):
     return ((1 - 2 * p_flip_term) * basis_0_part) + ((p_flip_term * (1 - p_flip_term)) * basis_1_part)
@@ -79,7 +75,6 @@ def min_half_fcn(p):
         return 0.5
     else:
         return p
-min_half_fcn_vec = np.vectorize(min_half_fcn)
 
 def mle_binomial(p_hat, win_index, lose_index):
     log_term = sum([math.log(n) for n in p_hat[win_index]])
@@ -98,7 +93,7 @@ def tweed_adj_fcn(eta_hat, gamma_param, theta_param, p_tilde, p_flip, probs, ome
     exp_p_hat = mu_hat + 0.5*theta_param*(-1*mu_hat-6*mu_hat*sigma2_hat-2*mu_hat**3+3*sigma2_hat+3*mu_hat**2)
     var_p_hat = ((1-0.5*theta_param)**2)*sigma2_hat + theta_param*sigma2_hat*(9*(mu_hat**4)*theta_param-18*(mu_hat**3)*theta_param + 9*(mu_hat**2)*theta_param-(1-theta_param*0.5)*(3*(mu_hat**2)-3*mu_hat))
 
-    p_hat = min_half_fcn_vec(exp_p_hat + var_p_hat/exp_p_hat)
+    p_hat = [min_half_fcn(p_adj) for p_adj in (exp_p_hat + var_p_hat/exp_p_hat)]
     if (p_hat < 0).sum() > 0:
         p_hat = p_flip
 
@@ -123,7 +118,7 @@ def tweedie_est(lambda_param, gamma_param, theta_param, p_old_new, p_old_new_fli
     exp_p_hat = mu_hat + 0.5*theta_param*(-mu_hat-6*mu_hat*sigma2_hat-2*mu_hat**3+3*sigma2_hat+3*mu_hat**2)
     var_p_hat = ((1-0.5*theta_param)**2)*sigma2_hat + theta_param*sigma2_hat*(9*(mu_hat**4)*theta_param-18*(mu_hat**3)*theta_param + 9*(mu_hat**2)*theta_param-(1-theta_param*(1/2))*(3*(mu_hat**2)-3*mu_hat))
 
-    p_hat = min_half_fcn_vec(exp_p_hat + var_p_hat / exp_p_hat)
+    p_hat = [min_half_fcn(p_adj) for p_adj in (exp_p_hat + var_p_hat/exp_p_hat)]
     if (p_hat < 0).sum() > 0:
         p_hat = p_old_new_flip
 
