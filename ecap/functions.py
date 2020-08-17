@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import quadprog
 
 ## Indicator function if a probability is greater than 1/2
 def greater_half_indicator(p_tilde_cur):
