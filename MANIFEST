@@ -4,4 +4,4 @@ setup.py
 ecap/__init__.py
 ecap/functions.py
 ecap/main.py
-ecap/patsy_bs_with_derivatives.py
+ecap/patsy bs with derivatives.py
