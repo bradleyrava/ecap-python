@@ -120,7 +120,7 @@ def predict_ecap(object, new_unadjusted):
     ## imports
     from ecap.functions import prob_flip_fcn, eta_min_fcn, min_half_fcn, tweedie_est
     from ecap.patsy_deriv import _eval_bspline_basis
-    
+
     ## Objects needed for quadratic program and omega matrix (same as ecap fcn)
     quantiles = np.linspace(0, 0.5, num=51)
 
@@ -138,7 +138,7 @@ def predict_ecap(object, new_unadjusted):
     new_flip = [prob_flip_fcn(p) for p in new_unadjusted]
 
     ## Combine new probs with the old ones
-    p_old_new = np.concatenate((object['unadjusted_prob'], p_new), axis=0)
+    p_old_new = np.concatenate((object['unadjusted_prob'], new_unadjusted), axis=0)
     p_old_new_flip = np.concatenate((object['unadjusted_flip'], new_flip), axis=0)
     probs_new_flip = np.sort(p_old_new_flip)
 
