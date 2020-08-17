@@ -5,13 +5,13 @@ import statistics
 import math
 import quadprog
 
+
 def ecap(unadjusted_prob, win_var, win_id, bias_indicator=False, lambda_grid=np.power(10, np.linspace(-6, 0, num=13)),
          gamma_grid=np.linspace(0.001,0.05,num=50), theta_grid=np.linspace(-4, 2, num=61, endpoint=True)):
-
     ## imports
     from ecap.functions import greater_half_indicator, prob_flip_fcn, dvec_terms_fcn, eta_min_fcn, risk_hat_fcn, risk_cvsplit_fcn, min_half_fcn, mle_binomial, tweed_adj_fcn, tweedie_est
     from ecap.patsy_deriv import _eval_bspline_basis
-
+         
     ## Win and Lose index's for later
     win_index = np.where(win_var == win_id)
     lose_index = np.where(win_var != win_id)
@@ -68,7 +68,7 @@ def ecap(unadjusted_prob, win_var, win_id, bias_indicator=False, lambda_grid=np.
 
     ## 2D grid search for gamma and theta (1D if the user specifies there is no bias)
     if bias_indicator == False:
-        gamma_storage = [tweed_adj_fcn(eta_hat_opt, g, 0, probs['p_tilde'], p_flip, probs, omega, basis_0, basis_1, basis_sum,
+        gamma_storage = [tweed_adj_fcn(eta_hat_opt, g, 0, probs['p_tilde'], probs['p_flip'], probs, omega, basis_0, basis_1, basis_sum,
                                   basis_0_grid, basis_1_grid, win_index, lose_index) for g in gamma_grid]
         theta_opt = 0.0
         gamma_opt = gamma_grid[np.argmin(gamma_storage)]
@@ -81,7 +81,7 @@ def ecap(unadjusted_prob, win_var, win_id, bias_indicator=False, lambda_grid=np.
             g = gamma_grid[ii]
             for jj in range(0, t_len):
                 t = theta_grid[jj]
-                score = tweed_adj_fcn(eta_hat_opt, g, t, probs['p_tilde'], p_flip, probs, omega, basis_0, basis_1,
+                score = tweed_adj_fcn(eta_hat_opt, g, t, probs['p_tilde'], probs['p_flip'], probs, omega, basis_0, basis_1,
                                       basis_sum, basis_0_grid, basis_1_grid, win_index, lose_index)
                 (gamma_theta_matrix[ii])[jj] = score
         min_index = np.where(gamma_theta_matrix == np.min(gamma_theta_matrix))
@@ -131,7 +131,7 @@ def predict_ecap(object, new_unadjusted):
     basis_1_grid = _eval_bspline_basis(x=pt, knots=quantiles, degree=3, deriv=1, include_intercept=True)
 
     ## Use these parameters to generate ECAP estimates on a test set of probability estimates
-    new_flip = [prob_flip_fcn(p) for p in new_unadjusted]
+    new_flip = prob_flip_fcn_vec(new_unadjusted)
 
     ## Combine new probs with the old ones
     p_old_new = np.concatenate((object['unadjusted_prob'], p_new), axis=0)
@@ -141,7 +141,9 @@ def predict_ecap(object, new_unadjusted):
     # Generate the basis matrix and its correspoding 1st and 2nd deriv's
     basis_0_new = _eval_bspline_basis(x=probs_new_flip, knots=quantiles, degree=3, deriv=0, include_intercept=True)
     basis_1_new = _eval_bspline_basis(x=probs_new_flip, knots=quantiles, degree=3, deriv=1, include_intercept=True)
+    # basis_2_new = pd.DataFrame(_eval_bspline_basis(x=probs_flip, knots=quantiles, degree=3, der=2))
     basis_sum_new = basis_0_new.transpose().dot(basis_0_new)
+    # sum_b_d1 = basis_1_new.transpose().dot(np.repeat(1, basis_1_new.shape[0]))
 
     ecap_old_new = tweedie_est(object['lambda_opt'], object['gamma_opt'], object['theta_opt'], p_old_new,
                                p_old_new_flip, pt, omega, basis_0_new, basis_1_new, basis_sum_new,
