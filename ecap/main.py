@@ -116,7 +116,7 @@ def ecap(unadjusted_prob, win_var, win_id, bias_indicator=False, lambda_grid=np.
     return return_dict
 
 ## Use the fit ecap model to adjust a new set of probability estimates.
-def predict_ecap(object, new_unadjusted):
+def predict(object, new_unadjusted):
     ## imports
     from ecap.functions import prob_flip_fcn, eta_min_fcn, min_half_fcn, tweedie_est
     from ecap.patsy_deriv import _eval_bspline_basis
