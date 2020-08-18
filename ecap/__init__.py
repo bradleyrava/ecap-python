@@ -1,1 +1,1 @@
-from ecap.main import ecap, predict_ecap
+from ecap.main import ecap, predict
