@@ -1,6 +1,9 @@
 ecap: Excess Certainty Adjusted Probability Estimate
 
-Implements the Excess Certainty Adjusted Probability adjustment procedure as described in the paper "Irrational Exuberance: Correcting Bias in Probability Estimates" by Gareth James, Peter Radchenko, and Bradley Rava (Journal of the American Statistical Association, 2020; <doi:10.1080/01621459.2020.1787175>). The package includes a function that preforms the ECAP adjustment and a function that estimates the parameters needed for implementing ECAP. 
+Implements the Excess Certainty Adjusted Probability adjustment procedure as described in the paper 
+"Irrational Exuberance: Correcting Bias in Probability Estimates" by Gareth James, Peter Radchenko, and Bradley Rava 
+(Journal of the American Statistical Association, 2020; <doi:10.1080/01621459.2020.1787175>). The package includes a 
+function that preforms the ECAP adjustment and a function that estimates the parameters needed for implementing ECAP. 
 
 Version:	0.2.3
 Published:	2020-08-17
